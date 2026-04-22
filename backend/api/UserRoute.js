@@ -10,10 +10,10 @@ import UserService from "../domain/user/UserService.js";
 const router = express.Router();
 
 
+
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
 const userApplication = new UserApplication(userService,userRepository);
-
 
 
 

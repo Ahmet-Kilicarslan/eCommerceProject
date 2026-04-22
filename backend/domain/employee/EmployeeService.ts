@@ -1,5 +1,5 @@
 import EmployeeRepository from "./EmployeeRepository";
-import Employee from "./Employee";
+import Employee from "./Employee.js";
 import type {EmployeeData} from "./EmployeeFactory";
 
 export default class EmployeeService {

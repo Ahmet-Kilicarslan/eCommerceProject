@@ -1,8 +1,11 @@
-import Employee from './Employee';
+import Employee from './Employee.js';
 import type {RowDataPacket} from "mysql2";
 
 
 export type EmployeePosition = 'Certified forklifter' | 'Manager' | 'Warehouseman';
+
+
+//Blue prints for employee entity***
 
 export interface EmployeeData {
     name: string;
