@@ -4,7 +4,7 @@ import session from 'express-session';
 import MySQLStoreFactory from 'express-mysql-session';
 import mysql from 'mysql2/promise';
 import 'dotenv/config';
-import EmployeeRoute from './api/EmployeeRoute.js';
+//import EmployeeRoute from './api/EmployeeRoute.js';
 import ProductRoute from '../backend/api/ProductRoute.js';
 import SupplierRoute from "./api/SupplierRoute.js";
 import UserRoute from "./api/UserRoute.js";
@@ -71,7 +71,7 @@ app.use(session({
 
 
 
-app.use('/Employee', EmployeeRoute);
+//app.use('/Employee', EmployeeRoute);
 app.use('/Product', ProductRoute);
 app.use('/User', UserRoute);
 app.use('/Supplier', SupplierRoute);

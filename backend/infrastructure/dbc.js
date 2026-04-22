@@ -1,12 +1,12 @@
 import * as mysql from 'mysql2/promise';
 import 'dotenv/config';
-import type { Pool } from 'mysql2/promise';
+
 
 if (!process.env.DB_HOST || !process.env.DB_USER || !process.env.DB_PASSWORD || !process.env.DB_NAME) {
     throw new Error('Missing required database environment variables. Check your .env file.');
 }
 
-export  const pool:Pool = mysql.createPool({
+export  const pool= mysql.createPool({
     host: process.env.DB_HOST,
     user:process.env.DB_USER,
     password:process.env.DB_PASSWORD,

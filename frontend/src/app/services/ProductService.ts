@@ -42,6 +42,11 @@ export default class ProductService {
 
       tap((response) => {
 
+        response.forEach(product => {
+          if(product.imageUrl){
+            product.imageUrl = `http://localhost:3000${product.imageUrl}`;
+          }
+        })
         console.log("here is products in inventory", response);
         return response;
 
