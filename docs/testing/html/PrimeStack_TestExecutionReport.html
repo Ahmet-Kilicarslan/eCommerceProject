@@ -125,7 +125,7 @@
 <h2>5. Frontend Usability Test Execution Notes</h2>
 <p>Frontend usability tests were written with Playwright. They cover:</p>
 <ul><li>UT-001: New user registration/login preparation flow.</li><li>UT-002: Product browsing/client dashboard flow.</li><li>UT-003: Existing user login flow.</li></ul>
-<p>The Playwright tests save screenshots under <code>frontend/tests/screenshots</code>; copies are included in this report's evidence folder.</p>
+<p>The Playwright tests save screenshots under <code>frontend/tests/screenshots</code> when they are run. These screenshots are not included as formal report evidence.</p>
 <h2>6. Performance Test Execution Notes</h2>
 <p>The k6 load test defines this load profile:</p>
 <div class="table-wrap"><table><thead><tr><th>Stage</th><th>Duration</th><th>Target virtual users</th></tr></thead><tbody><tr><td>Normal load</td><td>30 seconds</td><td>5</td></tr><tr><td>Load ramp</td><td>1 minute</td><td>20</td></tr><tr><td>Stress</td><td>30 seconds</td><td>50</td></tr><tr><td>Recovery</td><td>30 seconds</td><td>0</td></tr></tbody></table></div>
@@ -147,20 +147,12 @@
 <p>The application has meaningful automated coverage for core API and frontend component behavior. The main quality risks are concentrated in security hardening and API error semantics:</p>
 <ul><li>Sensitive routes should consistently require authentication and role checks.</li><li>Invalid client input should return 4xx responses instead of generic 500 errors.</li><li>Public registration must not accept privileged fields such as <code>role</code>.</li><li>User-controlled text should be validated or sanitized before storage/display.</li><li>Security headers should be centralized with middleware.</li><li>Express technology disclosure should be disabled.</li></ul>
 <h2>11. Evidence List</h2>
-<div class="table-wrap"><table><thead><tr><th>Evidence</th><th>File</th></tr></thead><tbody><tr><td>ZAP full report</td><td><code>docs/testing/evidence/2026-05-14-ZAP-Secuirty-Report-.html</code></td></tr><tr><td>ZAP main screenshot</td><td>See image below</td></tr><tr><td>CSP screenshot</td><td>See image below</td></tr><tr><td>X-Powered-By screenshot</td><td>See image below</td></tr><tr><td>X-Content-Type-Options screenshot</td><td>See image below</td></tr><tr><td>User Agent Fuzzer screenshot</td><td>See image below</td></tr><tr><td>UT-001 screenshots</td><td>See images below</td></tr><tr><td>UT-002 screenshots</td><td>See images below</td></tr><tr><td>UT-003 screenshots</td><td>See images below</td></tr><tr><td>DEF-001 before/after images</td><td><code>docs/testing/evidence/def-doc/word/media/</code></td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>Evidence</th><th>File</th></tr></thead><tbody><tr><td>ZAP full report</td><td><code>docs/testing/evidence/2026-05-14-ZAP-Secuirty-Report-.html</code></td></tr><tr><td>ZAP main screenshot</td><td>See image below</td></tr><tr><td>CSP screenshot</td><td>See image below</td></tr><tr><td>X-Powered-By screenshot</td><td>See image below</td></tr><tr><td>X-Content-Type-Options screenshot</td><td>See image below</td></tr><tr><td>User Agent Fuzzer screenshot</td><td>See image below</td></tr><tr><td>DEF-001 before/after images</td><td><code>docs/testing/evidence/def-doc/word/media/</code></td></tr></tbody></table></div>
 <figure><img src="../evidence/zap_test_001.png" alt="ZAP automated scan overview"><figcaption>ZAP automated scan overview</figcaption></figure>
 <figure><img src="../evidence/Screenshot from 2026-05-14 14-14-17.png" alt="ZAP CSP alert evidence"><figcaption>ZAP CSP alert evidence</figcaption></figure>
 <figure><img src="../evidence/Screenshot from 2026-05-14 14-14-21.png" alt="ZAP X-Powered-By alert evidence"><figcaption>ZAP X-Powered-By alert evidence</figcaption></figure>
 <figure><img src="../evidence/Screenshot from 2026-05-14 14-14-26.png" alt="ZAP X-Content-Type-Options alert evidence"><figcaption>ZAP X-Content-Type-Options alert evidence</figcaption></figure>
 <figure><img src="../evidence/Screenshot from 2026-05-14 14-14-30.png" alt="ZAP User Agent Fuzzer alert evidence"><figcaption>ZAP User Agent Fuzzer alert evidence</figcaption></figure>
-<figure><img src="../evidence/ui/UT-001-step1-landing.png" alt="UT-001 landing page"><figcaption>UT-001 landing page</figcaption></figure>
-<figure><img src="../evidence/ui/UT-001-step2-login-page.png" alt="UT-001 login/register page"><figcaption>UT-001 login/register page</figcaption></figure>
-<figure><img src="../evidence/ui/UT-001-step3-form-filled.png" alt="UT-001 registration fields filled"><figcaption>UT-001 registration fields filled</figcaption></figure>
-<figure><img src="../evidence/ui/UT-002-step1-home.png" alt="UT-002 home page"><figcaption>UT-002 home page</figcaption></figure>
-<figure><img src="../evidence/ui/UT-002-step2-products.png" alt="UT-002 products page"><figcaption>UT-002 products page</figcaption></figure>
-<figure><img src="../evidence/ui/UT-003-step1-login.png" alt="UT-003 login page"><figcaption>UT-003 login page</figcaption></figure>
-<figure><img src="../evidence/ui/UT-003-step2-credentials-filled.png" alt="UT-003 credentials filled"><figcaption>UT-003 credentials filled</figcaption></figure>
-<figure><img src="../evidence/ui/UT-003-step3-after-login.png" alt="UT-003 after login"><figcaption>UT-003 after login</figcaption></figure>
   </main>
 </body>
 </html>
