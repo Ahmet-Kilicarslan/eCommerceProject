@@ -5,7 +5,7 @@ import MySQLStoreFactory from 'express-mysql-session';
 import mysql from 'mysql2/promise';
 import 'dotenv/config';
 //import EmployeeRoute from './api/EmployeeRoute.js';
-import ProductRoute from '../backend/api/ProductRoute.js';
+import ProductRoute from './api/ProductRoute.js';
 import SupplierRoute from "./api/SupplierRoute.js";
 import UserRoute from "./api/UserRoute.js";
 import PurchaseRoute from "./api/PurchaseRoute.js";
@@ -15,10 +15,18 @@ import path from 'path';
 
 
 const MysqlStore = new MySQLStoreFactory(session);
-//create an express app
 const app = express();
 
-//enable express to parse incoming requests
+/*
+
+  node server.js
+
+npm test
+
+k6 run load-test.js
+
+k6 run security-test.js
+ */
 app.use(express.json());
 app.use("/images", express.static(path.join(process.cwd(), "public")));
 
@@ -30,7 +38,7 @@ app.use(cors({
 
 }));
 
-//enable express to parse incoming requests
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(process.cwd(), '../uploads')));
@@ -113,7 +121,6 @@ async function testDatabaseConnection() {
 }
 
 
-await testDatabaseConnection();
 
 
 export default app;

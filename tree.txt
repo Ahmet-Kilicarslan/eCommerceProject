@@ -1,0 +1,202 @@
+ahmet@ahmet-Vivobook-ASUSLaptop-M6500QC:~/WebstormProjects/meanProject$ tree -L 7 -I 'node_modules|dist|.git'
+.
+├── backend
+│   ├── api
+│   │   ├── ProductRoute.js
+│   │   ├── PurchaseRoute.js
+│   │   ├── SupplierRoute.js
+│   │   ├── UploadsRoute.js
+│   │   └── UserRoute.js
+│   ├── app.js
+│   ├── application
+│   │   ├── ProductApplication.js
+│   │   ├── PurchaseApplication.js
+│   │   ├── SupplierApplication.js
+│   │   └── UserApplication.js
+│   ├── domain
+│   │   ├── product
+│   │   │   ├── ProductFactory.js
+│   │   │   ├── Product.js
+│   │   │   ├── ProductRepository.js
+│   │   │   └── ProductService.js
+│   │   ├── purchase
+│   │   │   ├── PurchaseFactory.js
+│   │   │   ├── Purchase.js
+│   │   │   ├── PurchaseRepository.js
+│   │   │   └── PurchaseService.js
+│   │   ├── supplier
+│   │   │   ├── SupplierFactory.js
+│   │   │   ├── Supplier.js
+│   │   │   ├── SupplierRepository.js
+│   │   │   └── SupplierService.js
+│   │   └── user
+│   │       ├── UserFactory.js
+│   │       ├── User.js
+│   │       ├── UserRepository.js
+│   │       ├── UserService.js
+│   │       └── valueObjects
+│   │           ├── Email.js
+│   │           ├── Password.js
+│   │           └── Username.js
+│   ├── infrastructure
+│   │   ├── dbc.js
+│   │   └── middlewares
+│   │       ├── authenticate.js
+│   │       └── upload.js
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── server.js
+│   ├── tsconfig.json
+│   └── Utilities
+│       ├── errors.js
+│       └── hash.js
+├── file_structure.txt
+├── frontend
+│   ├── angular.json
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── README.md
+│   ├── src
+│   │   ├── app
+│   │   │   ├── app.config.ts
+│   │   │   ├── app.css
+│   │   │   ├── app.html
+│   │   │   ├── app.routes.ts
+│   │   │   ├── app.spec.ts
+│   │   │   ├── app.ts
+│   │   │   ├── components
+│   │   │   │   ├── adminPanels
+│   │   │   │   │   ├── clientele
+│   │   │   │   │   │   ├── clientele.css
+│   │   │   │   │   │   ├── clientele.html
+│   │   │   │   │   │   └── clientele.ts
+│   │   │   │   │   ├── Dashboard
+│   │   │   │   │   │   ├── dashboard.css
+│   │   │   │   │   │   ├── dashboard.html
+│   │   │   │   │   │   ├── dashboard.ts
+│   │   │   │   │   │   ├── pie-chart
+│   │   │   │   │   │   └── purchases-line-chart
+│   │   │   │   │   ├── Employee
+│   │   │   │   │   │   ├── add-editEmployee
+│   │   │   │   │   │   ├── fire-employee
+│   │   │   │   │   │   └── view-employees
+│   │   │   │   │   ├── Product
+│   │   │   │   │   │   ├── add-editProduct
+│   │   │   │   │   │   ├── remove-all
+│   │   │   │   │   │   └── view-products
+│   │   │   │   │   ├── Supplier
+│   │   │   │   │   │   ├── add-supplier
+│   │   │   │   │   │   ├── remove-supplier
+│   │   │   │   │   │   └── view-supplier
+│   │   │   │   │   └── Transaction
+│   │   │   │   │       ├── add-transaction
+│   │   │   │   │       └── view-transactions
+│   │   │   │   ├── client-header
+│   │   │   │   │   ├── client-header.css
+│   │   │   │   │   ├── client-header.html
+│   │   │   │   │   └── client-header.ts
+│   │   │   │   ├── clientPanels
+│   │   │   │   │   ├── cart
+│   │   │   │   │   │   ├── cart.css
+│   │   │   │   │   │   ├── cart.html
+│   │   │   │   │   │   └── cart.ts
+│   │   │   │   │   ├── client-dashboard
+│   │   │   │   │   │   ├── client-dashboard.css
+│   │   │   │   │   │   ├── client-dashboard.html
+│   │   │   │   │   │   └── client-dashboard.ts
+│   │   │   │   │   ├── client-profile
+│   │   │   │   │   │   ├── client-profile.css
+│   │   │   │   │   │   ├── client-profile.html
+│   │   │   │   │   │   └── client-profile.ts
+│   │   │   │   │   ├── client-profile-edit
+│   │   │   │   │   │   ├── client-profile-edit.css
+│   │   │   │   │   │   ├── client-profile-edit.html
+│   │   │   │   │   │   └── client-profile-edit.ts
+│   │   │   │   │   └── client-view-products
+│   │   │   │   │       ├── client-view-products.css
+│   │   │   │   │       ├── client-view-products.html
+│   │   │   │   │       └── client-view-products.ts
+│   │   │   │   ├── header
+│   │   │   │   │   ├── header.component.css
+│   │   │   │   │   ├── header.component.html
+│   │   │   │   │   └── header.component.ts
+│   │   │   │   ├── Login
+│   │   │   │   │   └── login-component
+│   │   │   │   │       ├── login-component.css
+│   │   │   │   │       ├── login-component.html
+│   │   │   │   │       └── login-component.ts
+│   │   │   │   └── sidebar
+│   │   │   │       ├── sidebar.component.css
+│   │   │   │       ├── sidebar.component.html
+│   │   │   │       └── sidebar.component.ts
+│   │   │   ├── guards
+│   │   │   │   ├── admin.guard.ts
+│   │   │   │   ├── auth.guard.ts
+│   │   │   │   └── client.guard.ts
+│   │   │   ├── models
+│   │   │   │   ├── Employee.ts
+│   │   │   │   ├── Product.ts
+│   │   │   │   ├── ProductWithDetails.ts
+│   │   │   │   ├── Purchase.ts
+│   │   │   │   ├── Supplier.ts
+│   │   │   │   ├── Transaction.ts
+│   │   │   │   └── User.ts
+│   │   │   └── services
+│   │   │       ├── EmployeeService.ts
+│   │   │       ├── ProductService.ts
+│   │   │       ├── PurchaseService.ts
+│   │   │       ├── PurchaseStateService.ts
+│   │   │       ├── SupplierService.ts
+│   │   │       ├── UserService.ts
+│   │   │       └── UtilsService.ts
+│   │   ├── assets
+│   │   │   ├── bootstrap-icons
+│   │   │   │   ├── bootstrap-icons.css
+│   │   │   │   ├── bootstrap-icons.woff
+│   │   │   │   └── bootstrap-icons.woff2
+│   │   │   └── images
+│   │   │       ├── lubiv.png
+│   │   │       ├── mona-loading-default.gif
+│   │   │       ├── pixel-art.gif
+│   │   │       ├── wp2448280-hiroshi-nagai-wallpapers.png
+│   │   │       ├── wp2448330-hiroshi-nagai-wallpapers.png
+│   │   │       └── wp2448370-hiroshi-nagai-wallpapers.png
+│   │   ├── chartjs.config.ts
+│   │   ├── environments
+│   │   │   ├── environment.production.ts
+│   │   │   └── environment.ts
+│   │   ├── index.html
+│   │   ├── main.ts
+│   │   └── styles.css
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   └── tsconfig.spec.json
+├── full_backup.sql
+├── package.json
+├── package-lock.json
+├── public
+│   ├── images
+│   ├── lubiv.png
+│   └── mona-loading-default.gif
+└── uploads
+    ├── product-1760613837245-334586787.jpg
+    ├── product-1760614196739-505383144.png
+    ├── product-1760616285996-687269582.jpg
+    ├── product-1760616459846-24159120.jpg
+    ├── product-1760617612814-128979623.jpg
+    ├── product-1760617805275-233764633.jpg
+    ├── product-1760619863316-902953025.jpg
+    ├── product-1761204938930-192617614.jpg
+    ├── product-1761205408050-388848108.jpg
+    ├── product-1761206578606-9954280.jpg
+    ├── product-1761206674129-282635261.jpg
+    ├── product-1761226515270-769654655.jpg
+    ├── product-1761227089080-824457905.jpg
+    ├── product-1761231816800-446985743.jpg
+    ├── product-1761231843044-332433404.jpg
+    ├── product-1761807762528-592606229.jpg
+    ├── product-1761807804711-813507213.jpg
+    ├── product-1761807825719-549613928.jpg
+    └── product-1761809621137-910853351.jpg
+
+58 directories, 141 files

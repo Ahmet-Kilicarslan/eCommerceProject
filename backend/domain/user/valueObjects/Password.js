@@ -1,11 +1,14 @@
+import {ValidationError} from "../../../Utilities/errors.js";
+
+
 export default class Password{
     constructor(value){
 
         if(!value){
-            throw new Error('Password is required');
+            throw new ValidationError('Password is required');
         }
         if(value.length < 6){
-            throw new Error('Password must be at least 6 characters long');
+            throw new ValidationError('Password must be at least 6 characters long');
         }
 
         this._value = value;

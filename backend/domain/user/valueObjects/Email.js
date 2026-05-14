@@ -5,13 +5,13 @@ export default class Email{
 constructor(value) {
 
     if (!value) {
-        throw new Error("Email is required");
+        throw new Error("Email required");
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if(!emailRegex.test(value)) {
-        throw new ValidationError("Invalid email format");
+        throw new Error("Invalid email format");
     }
 this._value = value.toLowerCase().trim();
 

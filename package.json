@@ -19,8 +19,13 @@
     "ng2-charts": "^8.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.5",
     "@types/bootstrap": "^5.2.10",
     "@types/chart.js": "^2.9.41",
-    "@types/node": "^24.2.1"
+    "@types/node": "^24.2.1",
+    "babel-jest": "^30.4.1",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
   }
 }

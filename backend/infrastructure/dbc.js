@@ -36,4 +36,4 @@ export  const pool= mysql.createPool({
     mysql -u root -p frost < /home/ahmet/Desktop/full_backup.sql
 
         *///tree -I 'node_modules|dist|build'
-//A#*s*irP"8@q1n*2
+
