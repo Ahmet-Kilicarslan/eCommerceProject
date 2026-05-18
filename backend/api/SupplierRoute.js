@@ -10,8 +10,17 @@ const supplierApplication = new SupplierApplication(supplierRepository, supplier
 
 // Create new supplier
 router.post('/', async (req, res) => {
-    const newSupplier = await supplierApplication.createSupplier(req.body);
-    res.json(newSupplier);
+    try {
+        const newSupplier = await supplierApplication.createSupplier(req.body);
+        res.json(newSupplier);
+    } catch (error) {
+        console.error('Failed to create supplier', error);
+        const statusCode = error.statusCode || 500;
+        res.status(statusCode).json({
+            error: 'Failed to create supplier',
+            message: error.message
+        });
+    }
 });
 
 // Get all suppliers

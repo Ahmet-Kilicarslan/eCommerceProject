@@ -16,7 +16,7 @@ export default class UserFactory {
             null,
             username,
             password,
-            userData.role || 'user',
+            'user',
             email,
         );
 

@@ -27,6 +27,14 @@ k6 run load-test.js
 
 k6 run security-test.js
  */
+app.disable('x-powered-by');
+
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "default-src 'self'; frame-ancestors 'none'; form-action 'self'");
+    next();
+});
+
 app.use(express.json());
 app.use("/images", express.static(path.join(process.cwd(), "public")));
 
@@ -87,6 +95,13 @@ app.use('/Purchase',PurchaseRoute);
 app.use('/Uploads',UploadsRoute);
 //app.use(handleMulterError);
 
+app.use((req, res) => {
+    res.status(404).json({
+        error: 'Not Found',
+        message: `Cannot ${req.method} ${req.path}`
+    });
+});
+
 
 async function testDatabaseConnection() {
     console.log('🔍 Testing database connection...');
@@ -124,5 +139,3 @@ async function testDatabaseConnection() {
 
 
 export default app;
-
-

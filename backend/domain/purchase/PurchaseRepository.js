@@ -22,7 +22,7 @@ export default class PurchaseRepository {
         try {
             const orderClause = order === 'asc' ? 'ORDER BY date ASC' : 'ORDER BY date DESC';
 
-            const sql = 'SELECT * FROM purchase WHERE userId = ? ${orderClause}';
+            const sql = `SELECT * FROM purchase WHERE userId = ? ${orderClause}`;
 
             const [result] = await pool.query(sql, [userId]);
 

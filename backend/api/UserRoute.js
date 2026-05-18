@@ -1,7 +1,7 @@
 import express from 'express';
 
 import UserApplication from '../application/UserApplication.js';
-import {requireAuth} from '../infrastructure/middlewares/authenticate.js';
+import {requireAdmin, requireAuth} from '../infrastructure/middlewares/authenticate.js';
 import UserRepository from "../domain/user/UserRepository.js";
 import UserService from "../domain/user/UserService.js";
 
@@ -111,7 +111,9 @@ router.post("/login", async (req, res) => {
 
     } catch (error) {
         console.error('❌ Login error:', error);
-        res.status(500).json({
+        const statusCode = error.statusCode || 500;
+
+        res.status(statusCode).json({
             error: '  Login failed',
             message: error.message
         });
@@ -177,10 +179,10 @@ router.get('/profile', requireAuth, async (req, res) => {
 });
 
 //get all users
-router.get('/users', async (req, res) => {
+router.get('/users', requireAdmin, async (req, res) => {
     try {
         const allUsers = await userApplication.getAllUsers();
-        res.status(201).json(allUsers)
+        res.status(200).json(allUsers)
     } catch (error) {
         console.error("Failed to fetch all users", error);
         res.status(500).json({

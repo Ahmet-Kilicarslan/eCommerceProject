@@ -7,12 +7,14 @@ const docsDir = path.join(repoRoot, 'docs', 'testing');
 const htmlDir = path.join(docsDir, 'html');
 const pdfDir = path.join(docsDir, 'pdf');
 
-const documents = [
+const defaultDocuments = [
   'PrimeStack_TestPlan.md',
   'PrimeStack_TestCaseDesign.md',
   'PrimeStack_TestExecutionReport.md',
   'PrimeStack_DefectReport.md',
 ];
+
+const documents = process.argv.slice(2).length > 0 ? process.argv.slice(2) : defaultDocuments;
 
 fs.mkdirSync(htmlDir, { recursive: true });
 fs.mkdirSync(pdfDir, { recursive: true });

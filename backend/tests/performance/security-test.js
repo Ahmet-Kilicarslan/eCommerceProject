@@ -9,6 +9,7 @@ export const options = {
 };
 
 export default function () {
+    const uniqueSuffix = `${Date.now()}-${__VU}-${__ITER}`;
 
     // ── ST-001: SQL Injection on Login ───────────────────────────────────────
     // Attack vector: inject SQL into username field
@@ -50,7 +51,7 @@ export default function () {
         `${BASE_URL}/User/register`,
         JSON.stringify({
             username: '<script>alert("xss")</script>',
-            email: 'xss@test.com',
+            email: `xss-${uniqueSuffix}@test.com`,
             password: 'Test1234!'
         }),
         { headers: { 'Content-Type': 'application/json' } }
@@ -81,8 +82,8 @@ export default function () {
     const massAssignment = http.post(
         `${BASE_URL}/User/register`,
         JSON.stringify({
-            username: 'hackerman',
-            email: 'hackerman@test.com',
+            username: `hackerman${uniqueSuffix}`,
+            email: `hackerman-${uniqueSuffix}@test.com`,
             password: 'Test1234!',
             role: 'admin'
         }),

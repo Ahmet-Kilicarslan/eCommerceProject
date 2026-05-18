@@ -110,91 +110,113 @@
 <body>
   <main class="page">
     <h1>Prime Stack Defect Report</h1>
-<p>Course: Software Validation, Verification and Security Testing<br>Application under test: Frost Inventory and Shopping System<br>Team: Prime Stack<br>Environment: Local backend <code>http://localhost:3000</code>, frontend <code>http://localhost:4200</code><br>Report date: 14 May 2026</p>
-<h2>1. Defect Summary</h2>
-<p>This report records the actual defects confirmed from the project test work, route review, security test design, and ZAP evidence. DEF-001 is marked fixed because the current defect list states it has already been corrected.</p>
-<div class="table-wrap"><table><thead><tr><th>ID</th><th>Title</th><th>Severity</th><th>Priority</th><th>Status</th><th>Related evidence</th></tr></thead><tbody><tr><td>DEF-001</td><td>Missing fields return 500 instead of 400</td><td>Medium</td><td>High</td><td>Fixed</td><td>TC-FUNC-002, DEF DOC before/after images</td></tr><tr><td>DEF-002</td><td>Template literal bug in <code>getPurchaseByUserId</code></td><td>Medium</td><td>High</td><td>Open</td><td>Purchase route/test review</td></tr><tr><td>DEF-003</td><td><code>SupplierRoute</code> POST has no error handling</td><td>Medium</td><td>Medium</td><td>Open</td><td>Supplier route review</td></tr><tr><td>DEF-004</td><td>Purchase create fails when <code>userId</code> is passed from test</td><td>High</td><td>High</td><td>Open</td><td>TC-FUNC-030</td></tr><tr><td>DEF-005</td><td>Login route hardcodes status 500</td><td>Medium</td><td>High</td><td>Open</td><td>TC-FUNC-010 to TC-FUNC-012</td></tr><tr><td>DEF-006</td><td>Mass assignment allows any user to register as admin</td><td>Critical</td><td>Critical</td><td>Open</td><td>ST-005</td></tr><tr><td>DEF-007</td><td><code>/User/users</code> exposes all user data without authentication</td><td>High</td><td>High</td><td>Open</td><td>ST-007, route review</td></tr><tr><td>DEF-008</td><td>XSS payload stored in database without sanitization</td><td>Medium</td><td>High</td><td>Open</td><td>ST-003</td></tr><tr><td>DEF-009</td><td>Missing security headers</td><td>Low</td><td>Medium</td><td>Open</td><td>ZAP scan, 14 May 2026</td></tr></tbody></table></div>
-<h2>2. Detailed Defects</h2>
-<h2>DEF-001: Missing Fields Return 500 Instead of 400</h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Priority</td><td>High</td></tr><tr><td>Status</td><td>Fixed</td></tr><tr><td>Source</td><td>Functional test / provided <code>def.docx</code> evidence</td></tr><tr><td>Related test</td><td>TC-FUNC-002</td></tr><tr><td>Endpoint</td><td><code>POST /User/register</code></td></tr></tbody></table></div>
-<p>Description: When a required registration field such as <code>email</code> was missing, the API returned <code>500 Internal Server Error</code>. This incorrectly classified a client validation problem as a server failure.</p>
-<p>Steps to reproduce:</p>
-<ol><li>Send <code>POST /User/register</code>.</li><li>Omit the <code>email</code> field from the request body.</li><li>Inspect the response status code.</li></ol>
-<p>Expected result: <code>400 Bad Request</code> with a clear validation message.</p>
-<p>Actual result before fix: <code>500 Internal Server Error</code>.</p>
-<p>Current result: Fixed. The endpoint now returns the expected validation response.</p>
-<p>Evidence: Images extracted from <code>/home/ahmet/Desktop/def.docx</code> are stored under <code>docs/testing/evidence/def-doc/word/media/</code>.</p>
-<figure><img src="../evidence/def-doc/word/media/image1.png" alt="DEF-001 evidence overview"><figcaption>DEF-001 evidence overview</figcaption></figure>
-<figure><img src="../evidence/def-doc/word/media/image2.png" alt="DEF-001 before fix"><figcaption>DEF-001 before fix</figcaption></figure>
-<figure><img src="../evidence/def-doc/word/media/image3.png" alt="DEF-001 after fix"><figcaption>DEF-001 after fix</figcaption></figure>
+<p>Course: Software Validation, Verification and Security Testing<br>Application under test: Frost Inventory and Shopping System<br>Team: Prime Stack<br>Environment: Local backend <code>http://localhost:3000</code>, frontend <code>http://localhost:4200</code><br>Report date: 18 May 2026</p>
+<h2>1. Defect Origin Summary</h2>
+<p>Not every defect came from the same test type. DEF-001 and DEF-002 were confirmed by backend functional tests. DEF-005, DEF-006, and DEF-007 come from security test design/scripted security checks. DEF-008 comes from the ZAP scan/header verification. DEF-003 and DEF-004 are source-code review/API robustness defects.</p>
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Title</th><th>Origin</th><th>Severity</th><th>Status</th></tr></thead><tbody><tr><td>DEF-001</td><td>Missing/invalid email returns 500 instead of 400</td><td>Functional tests TC-FUNC-002, TC-FUNC-008</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-002</td><td>Template literal bug in <code>getPurchaseByUserId</code></td><td>Functional test TC-FUNC-032</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-003</td><td><code>SupplierRoute</code> POST has no error handling</td><td>Source-code review</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-004</td><td>Login route hardcodes status 500</td><td>Functional/API error-handling review</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-005</td><td>Mass assignment allows any user to register as admin</td><td>Security test ST-005</td><td>Critical</td><td>Fixed</td></tr><tr><td>DEF-006</td><td><code>/User/users</code> exposes all user data without authentication</td><td>Security test ST-007 and route review</td><td>High</td><td>Fixed</td></tr><tr><td>DEF-007</td><td>XSS payload stored in database without sanitization</td><td>Security test ST-003</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-008</td><td>Missing security headers</td><td>ZAP scan/header verification</td><td>Low</td><td>Fixed</td></tr></tbody></table></div>
+<h2>2. Functional Test Evidence Summary</h2>
+<p>Before the fixes, the functional suite result was:</p>
+<p>```text<br>Test Suites: 2 failed, 2 passed, 4 total<br>Tests: 3 failed, 33 passed, 36 total<br>```</p>
+<p>After fixing the functional and API defects, the functional suite result was:</p>
+<p>```text<br>Test Suites: 4 passed, 4 total<br>Tests: 36 passed, 36 total<br>```</p>
+<p>After fixing the security defects, the k6 security result was:</p>
+<p>```text<br>checks_succeeded: 100.00% 7 out of 7<br>checks_failed: 0.00% 0 out of 7<br>```</p>
+<figure><img src="../evidence/defects/functional-before-summary-3-failed.png" alt="Functional test result before fixes"><figcaption>Functional test result before fixes</figcaption></figure>
+<figure><img src="../evidence/defects/functional-after-36-passed.png" alt="Functional test result after fixes"><figcaption>Functional test result after fixes</figcaption></figure>
+<h2>DEF-001: Missing/Invalid Email Returns 500 Instead of 400</h2>
+<h3>Origin</h3>
+<p>Functional testing. Confirmed by:</p>
+<ul><li><code>TC-FUNC-002: should reject registration with missing email</code></li><li><code>TC-FUNC-008: should reject invalid email format</code></li></ul>
+<h3>Details</h3>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Status</td><td>Fixed</td></tr><tr><td>Test file</td><td><code>backend/tests/functionality/user.test.js</code></td></tr><tr><td>Source files</td><td><code>backend/domain/user/valueObjects/Email.js</code>, <code>backend/api/UserRoute.js</code></td></tr></tbody></table></div>
+<p>Before the fix, <code>Email.js</code> threw plain <code>Error</code> objects. <code>UserRoute.js</code> checks <code>error.statusCode</code>; plain errors do not have that property, so the route fell back to <code>500</code>.</p>
+<p>Before:</p>
+<p>```js<br>throw new Error(&quot;Email required&quot;);<br>throw new Error(&quot;Invalid email format&quot;);<br>```</p>
+<p>After:</p>
+<p>```js<br>throw new ValidationError(&quot;Email required&quot;);<br>throw new ValidationError(&quot;Invalid email format&quot;);<br>```</p>
+<p>The route behavior then correctly maps the validation failure to <code>400 Bad Request</code>.</p>
+<h3>Evidence</h3>
+<figure><img src="../evidence/defects/def-001-before-user-test-failures.png" alt="DEF-001 failing user tests"><figcaption>DEF-001 failing user tests</figcaption></figure>
+<figure><img src="../evidence/defects/def-001-userroute-statuscode-fallback.png" alt="DEF-001 route fallback behavior"><figcaption>DEF-001 route fallback behavior</figcaption></figure>
+<figure><img src="../evidence/defects/def-001-before-email-plain-error.png" alt="DEF-001 before fix: plain Error in Email value object"><figcaption>DEF-001 before fix: plain Error in Email value object</figcaption></figure>
+<figure><img src="../evidence/defects/def-001-after-email-validationerror.png" alt="DEF-001 after fix: ValidationError in Email value object"><figcaption>DEF-001 after fix: ValidationError in Email value object</figcaption></figure>
 <h2>DEF-002: Template Literal Bug in <code>getPurchaseByUserId</code></h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Priority</td><td>High</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Purchase service/repository review</td></tr><tr><td>Related area</td><td>Purchase history</td></tr></tbody></table></div>
-<p>Description: The purchase retrieval logic contains a template literal issue in <code>getPurchaseByUserId</code>. When the query is constructed incorrectly, the method can fail or produce an invalid SQL/order expression.</p>
-<p>Steps to reproduce:</p>
-<ol><li>Start the backend.</li><li>Request purchase history using <code>GET /Purchase/byUserId/:userId</code>.</li><li>Use both <code>order=asc</code> and <code>order=desc</code>.</li></ol>
-<p>Expected result: The endpoint returns the selected user's purchases in the requested order.</p>
-<p>Actual result: The method can fail because the query string is not built correctly.</p>
-<p>Suggested fix: Correct the template literal syntax in the purchase repository/service and keep the order value allow-listed to <code>asc</code> or <code>desc</code>.</p>
+<h3>Origin</h3>
+<p>Functional testing. Confirmed by:</p>
+<ul><li><code>TC-FUNC-032: should return purchases for a valid user id</code></li></ul>
+<h3>Details</h3>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Status</td><td>Fixed</td></tr><tr><td>Test file</td><td><code>backend/tests/functionality/purchase.test.js</code></td></tr><tr><td>Source file</td><td><code>backend/domain/purchase/PurchaseRepository.js</code></td></tr></tbody></table></div>
+<p>Before the fix, the SQL string used normal quotes, so <code>${orderClause}</code> was sent to MySQL literally.</p>
+<p>Before:</p>
+<p>```js<br>const sql = 'SELECT * FROM purchase WHERE userId = ? ${orderClause}';<br>```</p>
+<p>After:</p>
+<p>```js<br>const sql = <code>SELECT * FROM purchase WHERE userId = ? ${orderClause}</code>;<br>```</p>
+<p>This allows <code>ORDER BY date ASC</code> or <code>ORDER BY date DESC</code> to be inserted into the SQL query correctly.</p>
+<h3>Evidence</h3>
+<figure><img src="../evidence/defects/def-002-before-query-string.png" alt="DEF-002 before fix: order clause not interpolated"><figcaption>DEF-002 before fix: order clause not interpolated</figcaption></figure>
+<figure><img src="../evidence/defects/def-002-after-template-literal.png" alt="DEF-002 after fix: template literal used"><figcaption>DEF-002 after fix: template literal used</figcaption></figure>
 <h2>DEF-003: <code>SupplierRoute</code> POST Has No Error Handling</h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Priority</td><td>Medium</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Route review</td></tr><tr><td>Endpoint</td><td><code>POST /Supplier/</code></td></tr><tr><td>Related tests</td><td>TC-FUNC-023, TC-FUNC-024</td></tr></tbody></table></div>
-<p>Description: The supplier creation route directly awaits <code>supplierApplication.createSupplier(req.body)</code> and returns the result without a <code>try/catch</code>. If supplier validation or duplicate checks throw an error, Express may return an uncontrolled server error instead of a clear API response.</p>
-<p>Steps to reproduce:</p>
-<ol><li>Send <code>POST /Supplier/</code> with invalid or duplicate supplier data.</li><li>Observe whether the API returns a controlled error response.</li></ol>
-<p>Expected result: Invalid supplier input should return a controlled <code>400</code> or <code>409</code> response.</p>
-<p>Actual result: The route has no local error handling and can return an unstructured error.</p>
-<p>Suggested fix: Wrap supplier creation in <code>try/catch</code>, map duplicate supplier errors to <code>409</code>, validation errors to <code>400</code>, and unexpected errors to <code>500</code>.</p>
-<h2>DEF-004: Purchase Create Fails When <code>userId</code> Is Passed From Test</h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>High</td></tr><tr><td>Priority</td><td>High</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Functional test</td></tr><tr><td>Related test</td><td>TC-FUNC-030</td></tr><tr><td>Endpoint</td><td><code>POST /Purchase/create</code></td></tr></tbody></table></div>
-<p>Description: The purchase creation flow fails when <code>userId</code> is supplied from the test setup. This blocks automated verification of the normal purchase workflow.</p>
-<p>Steps to reproduce:</p>
-<ol><li>Select an existing user id and product id from the database.</li><li>Send <code>POST /Purchase/create</code> with <code>userId</code>, <code>totalAmount</code>, and a <code>products</code> array.</li><li>Observe the response.</li></ol>
-<p>Expected result: Status <code>201</code>, with a purchase object and purchased-product records returned.</p>
-<p>Actual result: Purchase creation fails for the test-provided <code>userId</code>.</p>
-<p>Suggested fix: Validate the exact request shape expected by <code>PurchaseApplication.createPurchase</code>, confirm user id foreign-key compatibility, and add clear route-level validation before inserting purchase records.</p>
-<h2>DEF-005: Login Route Hardcodes Status 500</h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Priority</td><td>High</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Functional tests / route review</td></tr><tr><td>Related tests</td><td>TC-FUNC-010, TC-FUNC-011, TC-FUNC-012</td></tr><tr><td>Endpoint</td><td><code>POST /User/login</code></td></tr></tbody></table></div>
-<p>Description: The login route returns <code>500</code> for failed login cases. Wrong passwords, unknown users, and missing credentials are expected client/authentication failures, not internal server errors.</p>
-<p>Steps to reproduce:</p>
-<ol><li>Send <code>POST /User/login</code> with a wrong password.</li><li>Send <code>POST /User/login</code> with an unknown username.</li><li>Send <code>POST /User/login</code> with an empty body.</li></ol>
-<p>Expected result: <code>401 Unauthorized</code> for invalid credentials and <code>400 Bad Request</code> for missing credentials.</p>
-<p>Actual result: The route hardcodes or maps these cases to <code>500</code>.</p>
-<p>Suggested fix: Return status codes based on error type: <code>400</code> for missing input, <code>401</code> for invalid credentials, and <code>500</code> only for unexpected server failures.</p>
-<h2>DEF-006: Mass Assignment Allows Any User to Register as Admin</h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Critical</td></tr><tr><td>Priority</td><td>Critical</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Security test design</td></tr><tr><td>Related test</td><td>ST-005</td></tr><tr><td>Endpoint</td><td><code>POST /User/register</code></td></tr></tbody></table></div>
-<p>Description: A user can include privileged fields such as <code>role: &quot;admin&quot;</code> in the registration payload. If the backend accepts that field, any unauthenticated user can create an administrator account.</p>
-<p>Steps to reproduce:</p>
-<ol><li>Send <code>POST /User/register</code>.</li><li>Include a normal username, email, password, and <code>&quot;role&quot;: &quot;admin&quot;</code> in the body.</li><li>Inspect the created user's role.</li></ol>
-<p>Expected result: The backend ignores client-provided role values and assigns a safe default role.</p>
-<p>Actual result: The mass assignment test indicates that admin role assignment is possible.</p>
-<p>Suggested fix: Use an explicit allow-list of registration fields. Do not accept <code>role</code>, <code>id</code>, or other privileged fields from public registration requests.</p>
-<h2>DEF-007: <code>/User/users</code> Exposes All User Data Without Authentication</h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>High</td></tr><tr><td>Priority</td><td>High</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Security test design / route review</td></tr><tr><td>Related test</td><td>ST-007</td></tr><tr><td>Endpoint</td><td><code>GET /User/users</code></td></tr></tbody></table></div>
-<p>Description: The user list route is publicly reachable without authentication or admin authorization. This can expose user records and supports account enumeration.</p>
-<p>Steps to reproduce:</p>
-<ol><li>Start the backend.</li><li>Do not log in.</li><li>Send <code>GET /User/users</code>.</li></ol>
-<p>Expected result: <code>401 Unauthorized</code> for unauthenticated requests and <code>403 Forbidden</code> for authenticated non-admin users.</p>
-<p>Actual result: Route review shows the endpoint calls <code>userApplication.getAllUsers()</code> without <code>requireAuth</code> or an admin guard.</p>
-<p>Suggested fix: Add authentication middleware and an admin-role check to <code>/User/users</code>. Return only safe user fields.</p>
-<h2>DEF-008: XSS Payload Stored in Database Without Sanitization</h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Priority</td><td>High</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Security test design</td></tr><tr><td>Related test</td><td>ST-003</td></tr><tr><td>Endpoint</td><td><code>POST /User/register</code></td></tr></tbody></table></div>
-<p>Description: The application accepts an XSS payload in user-controlled input and stores it in the database. If that value is rendered later without escaping, it may execute script in a user's browser.</p>
-<p>Steps to reproduce:</p>
-<ol><li>Send <code>POST /User/register</code>.</li><li>Use <code>&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;</code> as the username.</li><li>Check whether the value is rejected, sanitized, or stored unchanged.</li></ol>
-<p>Expected result: The payload is rejected or safely encoded before storage/display.</p>
-<p>Actual result: The XSS payload is stored without sanitization.</p>
-<p>Suggested fix: Validate username characters, reject HTML/script tags, and rely on frontend output encoding when displaying user-controlled values.</p>
-<h2>DEF-009: Missing Security Headers</h2>
-<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Low</td></tr><tr><td>Priority</td><td>Medium</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>ZAP scan</td></tr><tr><td>Tool</td><td>ZAP by Checkmarx 2.17.0</td></tr><tr><td>Scan date</td><td>14 May 2026</td></tr><tr><td>Related alerts</td><td>CSP no-fallback directives, missing <code>X-Content-Type-Options</code>, <code>X-Powered-By: Express</code></td></tr></tbody></table></div>
-<p>Description: ZAP identified missing or weak security headers on backend responses. These are hardening issues rather than direct exploit proof, but they reduce browser-side protections and reveal server implementation details.</p>
-<p>Evidence from ZAP:</p>
+<h3>Origin</h3>
+<p>Source-code review.</p>
+<h3>Details</h3>
+<p><code>POST /Supplier/</code> directly awaits supplier creation without local <code>try/catch</code> handling. If validation or duplicate checks fail, the API may return an uncontrolled server error instead of a structured <code>400</code> or <code>409</code> response.</p>
+<p>Fix applied: supplier creation is now wrapped in <code>try/catch</code>. The route uses <code>error.statusCode || 500</code>, returns a structured JSON error body, and still preserves the previous success behavior.</p>
+<h2>DEF-004: Login Route Hardcodes Status 500</h2>
+<h3>Origin</h3>
+<p>Functional/API error-handling review.</p>
+<h3>Details</h3>
+<p>The login route returns <code>500</code> for invalid login cases. Wrong password, unknown username, and missing credentials should be client/authentication failures.</p>
+<p>Expected statuses:</p>
+<ul><li>Missing username/password: <code>400 Bad Request</code></li><li>Wrong username/password: <code>401 Unauthorized</code></li><li>Unexpected backend failure: <code>500 Internal Server Error</code></li></ul>
+<p>Fix applied: the login route now uses <code>error.statusCode || 500</code>, the same pattern used by the registration route.</p>
+<p>Verification:</p>
+<ul><li>Wrong username/password returns <code>401 Unauthorized</code>.</li><li>Missing credentials returns <code>400 Bad Request</code>.</li><li>Functional suite passed with <code>36/36</code> tests.</li></ul>
+<h3>Evidence</h3>
+<figure><img src="../evidence/defects/def-004-login-statuscode-fix.png" alt="DEF-004 login route status-code fix"><figcaption>DEF-004 login route status-code fix</figcaption></figure>
+<h2>DEF-005: Mass Assignment Allows Any User to Register as Admin</h2>
+<h3>Origin</h3>
+<p>Security test ST-005.</p>
+<h3>Details</h3>
+<p>The security test attempts to register with <code>role: &quot;admin&quot;</code> in the request body. Public registration should not accept privileged fields from the client.</p>
+<p>Fix applied: public registration no longer trusts <code>userData.role</code>. <code>UserFactory.createUser()</code> always creates normal users with role <code>user</code>; privileged admin creation must happen through the separate <code>createAdmin()</code> path.</p>
+<p>Verification from k6:</p>
+<p>```text<br>ST-005 Mass Assignment: 201 ... &quot;role&quot;:&quot;user&quot;<br>✓ ST-005 mass assignment does not grant admin role<br>```</p>
+<h3>Evidence</h3>
+<figure><img src="../evidence/defects/def-005-mass-assignment-fix.png" alt="DEF-005 mass-assignment role fix"><figcaption>DEF-005 mass-assignment role fix</figcaption></figure>
+<h2>DEF-006: <code>/User/users</code> Exposes All User Data Without Authentication</h2>
+<h3>Origin</h3>
+<p>Security test ST-007 and route review.</p>
+<h3>Details</h3>
+<p><code>GET /User/users</code> should require authentication and admin authorization. Public access can expose user data and support account enumeration.</p>
+<p>Expected behavior:</p>
+<ul><li>Unauthenticated request: <code>401 Unauthorized</code></li><li>Authenticated non-admin request: <code>403 Forbidden</code></li><li>Admin request: safe user list only</li></ul>
+<p>Fix applied: <code>/User/users</code> now uses <code>requireAdmin</code>, which returns <code>401</code> for unauthenticated users and <code>403</code> for users without sufficient privileges.</p>
+<p>Verification from k6:</p>
+<p>```text<br>ST-007 Unauth User List: 401 - {&quot;error&quot;:&quot;Authentication required&quot;}<br>✓ ST-007 user list requires authentication<br>```</p>
+<h3>Evidence</h3>
+<figure><img src="../evidence/defects/def-006-user-list-auth-fix.png" alt="DEF-006 user list admin authorization fix"><figcaption>DEF-006 user list admin authorization fix</figcaption></figure>
+<h2>DEF-007: XSS Payload Stored in Database Without Sanitization</h2>
+<h3>Origin</h3>
+<p>Security test ST-003.</p>
+<h3>Details</h3>
+<p>The security test sends <code>&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;</code> as a username. The application should reject or sanitize this input before storage/display.</p>
+<p>Fix applied: the <code>Username</code> value object now rejects <code>&lt;</code> and <code>&gt;</code> characters, preventing script-tag usernames from being stored.</p>
+<p>Verification from k6:</p>
+<p>```text<br>ST-003 XSS Registration: 400 - {&quot;error&quot;:&quot;Registration failed&quot;,&quot;message&quot;:&quot;Username contains invalid characters&quot;}<br>✓ ST-003 XSS payload in username is handled<br>```</p>
+<h3>Evidence</h3>
+<figure><img src="../evidence/defects/def-007-xss-username-validation-fix.png" alt="DEF-007 username validation fix"><figcaption>DEF-007 username validation fix</figcaption></figure>
+<h2>DEF-008: Missing Security Headers</h2>
+<h3>Origin</h3>
+<p>ZAP scan.</p>
+<h3>Details</h3>
+<p>ZAP reported missing or weak security headers:</p>
 <div class="table-wrap"><table><thead><tr><th>Header issue</th><th>Risk</th><th>Evidence</th></tr></thead><tbody><tr><td>CSP missing no-fallback directives</td><td>Medium</td><td><code>Content-Security-Policy: default-src 'none'</code> without <code>frame-ancestors</code> and <code>form-action</code></td></tr><tr><td><code>X-Content-Type-Options</code> missing</td><td>Low</td><td><code>/Product/</code> response does not include <code>nosniff</code></td></tr><tr><td><code>X-Powered-By</code> exposed</td><td>Low</td><td>Response contains <code>X-Powered-By: Express</code></td></tr></tbody></table></div>
-<p>Steps to reproduce:</p>
-<ol><li>Run ZAP automated scan against <code>http://localhost:3000/Product/</code>.</li><li>Review passive alerts.</li><li>Inspect headers on <code>/Product/</code> and missing routes such as <code>/robots.txt</code>.</li></ol>
-<p>Expected result: Security headers are present and technology disclosure is suppressed.</p>
-<p>Actual result: ZAP reports missing security headers and Express disclosure.</p>
-<p>Suggested fix: Add centralized Express security middleware. At minimum, disable <code>x-powered-by</code>, add <code>X-Content-Type-Options: nosniff</code>, and configure CSP explicitly.</p>
-<h2>3. Recommended Fix Order</h2>
-<ol><li>Fix DEF-006 immediately because public admin registration is a critical privilege escalation.</li><li>Fix DEF-007 by protecting <code>/User/users</code> with authentication and admin authorization.</li><li>Fix DEF-004 so the main purchase workflow can be tested reliably.</li><li>Fix DEF-005 and DEF-003 to improve API error handling and test clarity.</li><li>Fix DEF-002 to stabilize purchase history.</li><li>Fix DEF-008 by validating/sanitizing user input.</li><li>Fix DEF-009 with centralized security headers.</li><li>Keep DEF-001 marked fixed and retain its before/after evidence for the final report.</li></ol>
+<p>Fix applied:</p>
+<ul><li><code>app.disable('x-powered-by')</code></li><li><code>X-Content-Type-Options: nosniff</code></li><li><code>Content-Security-Policy: default-src 'self'; frame-ancestors 'none'; form-action 'self'</code></li><li>Custom JSON <code>404</code> handler so missing routes such as <code>/robots.txt</code> no longer fall back to Express's default CSP.</li></ul>
+<p>Verification from header check:</p>
+<p>```text<br>HTTP/1.1 404 Not Found<br>X-Content-Type-Options: nosniff<br>Content-Security-Policy: default-src 'self'; frame-ancestors 'none'; form-action 'self'<br>```</p>
+<h3>Evidence</h3>
+<figure><img src="../evidence/defects/def-008-security-headers-fix.png" alt="DEF-008 security header middleware fix"><figcaption>DEF-008 security header middleware fix</figcaption></figure>
   </main>
 </body>
 </html>

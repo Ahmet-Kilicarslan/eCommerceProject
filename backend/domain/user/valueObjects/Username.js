@@ -11,6 +11,10 @@ export default class Username {
             throw new ValidationError("Username must be between 3-50 characters");
         }
 
+        if (/[<>]/.test(value)) {
+            throw new ValidationError("Username contains invalid characters");
+        }
+
         this._value = value.trim();
         Object.freeze(this);
     }

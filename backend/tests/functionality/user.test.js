@@ -162,7 +162,7 @@ describe('User Login', () => {
                 password: 'WrongPassword!'
             });
 
-        expect(response.status).toBe(500);
+        expect(response.status).toBe(401);
     });
 
     // TC-FUNC-011: Error handling — non-existent username
@@ -174,7 +174,7 @@ describe('User Login', () => {
                 password: 'Test1234!'
             });
 
-        expect(response.status).toBe(500);
+        expect(response.status).toBe(401);
     });
 
     // TC-FUNC-012: Error handling — missing credentials
@@ -183,7 +183,7 @@ describe('User Login', () => {
             .post('/User/login')
             .send({});
 
-        expect(response.status).toBe(500);
+        expect(response.status).toBe(400);
     });
 
 });
