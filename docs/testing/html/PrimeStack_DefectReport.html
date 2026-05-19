@@ -110,17 +110,17 @@
 <body>
   <main class="page">
     <h1>Prime Stack Defect Report</h1>
-<p>Course: Software Validation, Verification and Security Testing<br>Application under test: Frost Inventory and Shopping System<br>Team: Prime Stack<br>Environment: Local backend <code>http://localhost:3000</code>, frontend <code>http://localhost:4200</code><br>Report date: 18 May 2026</p>
+<p>Course: Software Validation, Verification and Security Testing<br>Application under test: Frost Inventory and Shopping System<br>Team: Prime Stack<br>Environment: Local backend <code>http://localhost:3000</code>, frontend <code>http://localhost:4200</code><br>Report date: 19 May 2026</p>
 <h2>1. Defect Origin Summary</h2>
-<p>Not every defect came from the same test type. DEF-001 and DEF-002 were confirmed by backend functional tests. DEF-005, DEF-006, and DEF-007 come from security test design/scripted security checks. DEF-008 comes from the ZAP scan/header verification. DEF-003 and DEF-004 are source-code review/API robustness defects.</p>
-<div class="table-wrap"><table><thead><tr><th>ID</th><th>Title</th><th>Origin</th><th>Severity</th><th>Status</th></tr></thead><tbody><tr><td>DEF-001</td><td>Missing/invalid email returns 500 instead of 400</td><td>Functional tests TC-FUNC-002, TC-FUNC-008</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-002</td><td>Template literal bug in <code>getPurchaseByUserId</code></td><td>Functional test TC-FUNC-032</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-003</td><td><code>SupplierRoute</code> POST has no error handling</td><td>Source-code review</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-004</td><td>Login route hardcodes status 500</td><td>Functional/API error-handling review</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-005</td><td>Mass assignment allows any user to register as admin</td><td>Security test ST-005</td><td>Critical</td><td>Fixed</td></tr><tr><td>DEF-006</td><td><code>/User/users</code> exposes all user data without authentication</td><td>Security test ST-007 and route review</td><td>High</td><td>Fixed</td></tr><tr><td>DEF-007</td><td>XSS payload stored in database without sanitization</td><td>Security test ST-003</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-008</td><td>Missing security headers</td><td>ZAP scan/header verification</td><td>Low</td><td>Fixed</td></tr></tbody></table></div>
+<p>Not every defect came from the same test type. DEF-001 and DEF-002 were confirmed by backend functional tests. DEF-005, DEF-006, and DEF-007 come from security test design/scripted security checks. DEF-008 comes from the ZAP scan/header verification. DEF-003 and DEF-004 are source-code review/API robustness defects. DEF-009 and DEF-010 were confirmed by expanded Playwright profile coverage. DEF-011 and DEF-012 come from teammate manual usability review.</p>
+<div class="table-wrap"><table><thead><tr><th>ID</th><th>Title</th><th>Origin</th><th>Severity</th><th>Status</th></tr></thead><tbody><tr><td>DEF-001</td><td>Missing/invalid email returns 500 instead of 400</td><td>Functional tests TC-FUNC-002, TC-FUNC-008</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-002</td><td>Template literal bug in <code>getPurchaseByUserId</code></td><td>Functional test TC-FUNC-032</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-003</td><td><code>SupplierRoute</code> POST has no error handling</td><td>Source-code review</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-004</td><td>Login route hardcodes status 500</td><td>Functional/API error-handling review</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-005</td><td>Mass assignment allows any user to register as admin</td><td>Security test ST-005</td><td>Critical</td><td>Fixed</td></tr><tr><td>DEF-006</td><td><code>/User/users</code> exposes all user data without authentication</td><td>Security test ST-007 and route review</td><td>High</td><td>Fixed</td></tr><tr><td>DEF-007</td><td>XSS payload stored in database without sanitization</td><td>Security test ST-003</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-008</td><td>Missing security headers</td><td>ZAP scan/header verification</td><td>Low</td><td>Fixed</td></tr><tr><td>DEF-009</td><td>Login stores value objects in session, causing <code>[object Object]</code> in UI</td><td>Playwright profile test UT-007</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-010</td><td>Profile refresh assigns wrapped API response as user state</td><td>Playwright profile edit test UT-009</td><td>Medium</td><td>Fixed</td></tr><tr><td>DEF-011</td><td>Inconsistent background color on registration input fields</td><td>Manual usability test UT-MAN-001</td><td>Low</td><td>Open</td></tr><tr><td>DEF-012</td><td>Missing search and filtering functionality for product discovery</td><td>Manual usability test UT-MAN-002</td><td>Medium</td><td>Open</td></tr></tbody></table></div>
 <h2>2. Functional Test Evidence Summary</h2>
 <p>Before the fixes, the functional suite result was:</p>
 <p>```text<br>Test Suites: 2 failed, 2 passed, 4 total<br>Tests: 3 failed, 33 passed, 36 total<br>```</p>
 <p>After fixing the functional and API defects, the functional suite result was:</p>
 <p>```text<br>Test Suites: 4 passed, 4 total<br>Tests: 36 passed, 36 total<br>```</p>
 <p>After fixing the security defects, the k6 security result was:</p>
-<p>```text<br>checks_succeeded: 100.00% 7 out of 7<br>checks_failed: 0.00% 0 out of 7<br>```</p>
+<p>```text<br>checks_succeeded: 100.00% 8 out of 8<br>checks_failed: 0.00% 0 out of 8<br>```</p>
 <figure><img src="../evidence/defects/functional-before-summary-3-failed.png" alt="Functional test result before fixes"><figcaption>Functional test result before fixes</figcaption></figure>
 <figure><img src="../evidence/defects/functional-after-36-passed.png" alt="Functional test result after fixes"><figcaption>Functional test result after fixes</figcaption></figure>
 <h2>DEF-001: Missing/Invalid Email Returns 500 Instead of 400</h2>
@@ -217,6 +217,54 @@
 <p>```text<br>HTTP/1.1 404 Not Found<br>X-Content-Type-Options: nosniff<br>Content-Security-Policy: default-src 'self'; frame-ancestors 'none'; form-action 'self'<br>```</p>
 <h3>Evidence</h3>
 <figure><img src="../evidence/defects/def-008-security-headers-fix.png" alt="DEF-008 security header middleware fix"><figcaption>DEF-008 security header middleware fix</figcaption></figure>
+<h2>DEF-009: Login Stores Value Objects in Session, Causing <code>[object Object]</code> in UI</h2>
+<h3>Origin</h3>
+<p>Frontend Playwright profile testing. Confirmed by:</p>
+<ul><li><code>UT-007: Client can view profile and open edit profile form</code></li></ul>
+<h3>Details</h3>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Status</td><td>Fixed</td></tr><tr><td>Test file</td><td><code>frontend/tests/example.spec.ts</code></td></tr><tr><td>Source file</td><td><code>backend/api/UserRoute.js</code></td></tr></tbody></table></div>
+<p>The login route stored <code>user.username</code> and <code>user.email</code> directly in the session. In some cases those fields are value objects, so <code>/User/status</code> returned an object instead of a string. The Angular profile screen then rendered <code>Welcome, [object Object]!</code>.</p>
+<p>Fix applied: the login route now stores primitive string values using <code>.value</code> or <code>._value</code> before falling back to the raw field.</p>
+<p>Verification:</p>
+<p>```text<br>PASS [chromium] UT-007: Client can view profile and open edit profile form<br>PASS [firefox] UT-007: Client can view profile and open edit profile form<br>```</p>
+<h2>DEF-010: Profile Refresh Assigns Wrapped API Response as User State</h2>
+<h3>Origin</h3>
+<p>Frontend Playwright profile edit testing. Confirmed by:</p>
+<ul><li><code>UT-009: Client can edit profile username and email</code></li></ul>
+<h3>Details</h3>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Status</td><td>Fixed</td></tr><tr><td>Test file</td><td><code>frontend/tests/example.spec.ts</code></td></tr><tr><td>Source file</td><td><code>frontend/src/app/components/clientPanels/client-profile/client-profile.ts</code></td></tr></tbody></table></div>
+<p>After a profile update, the profile component refreshed the user profile but assigned the full API response wrapper to <code>currentUser</code>. Because <code>/User/profile</code> returns <code>{ message, user }</code>, the page could render blank profile fields after saving.</p>
+<p>Fix applied: <code>fetchFreshProfile()</code> now assigns <code>response.user || response</code>, so both wrapped and direct user responses are handled.</p>
+<p>Verification:</p>
+<p>```text<br>PASS [chromium] UT-009: Client can edit profile username and email<br>PASS [firefox] UT-009: Client can edit profile username and email<br>```</p>
+<h2>DEF-011: Inconsistent Background Color on Registration Input Fields</h2>
+<h3>Origin</h3>
+<p>Manual usability testing from teammate review. Related observation:</p>
+<ul><li><code>UT-MAN-001: Registration visual consistency</code></li></ul>
+<h3>Details</h3>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Low</td></tr><tr><td>Priority</td><td>Medium</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Manual usability test</td></tr><tr><td>Area</td><td>Frontend <code>/login</code> registration form</td></tr></tbody></table></div>
+<p>On the registration form, the username and password inputs appear with a gray background while the email input appears white. Test users may interpret the gray fields as disabled or less editable, which slows down the registration flow.</p>
+<p>Steps to reproduce:</p>
+<ol><li>Navigate to <code>http://localhost:4200/login</code>.</li><li>Click the <code>Register</code> tab.</li><li>Compare the username, email, and password input field backgrounds.</li></ol>
+<p>Expected result: all active registration inputs use consistent visual styling.</p>
+<p>Actual result: input field background colors are inconsistent.</p>
+<p>Suggested fix: unify CSS styling for all input fields in the login/register component.</p>
+<h3>Evidence</h3>
+<figure><img src="../evidence/friend-doc/def-011-registration-input-colors.png" alt="DEF-011 registration input color evidence"><figcaption>DEF-011 registration input color evidence</figcaption></figure>
+<h2>DEF-012: Missing Search and Filtering Functionality for Product Discovery</h2>
+<h3>Origin</h3>
+<p>Manual usability testing from teammate review. Related observation:</p>
+<ul><li><code>UT-MAN-002: Product discovery/search</code></li></ul>
+<h3>Details</h3>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Severity</td><td>Medium</td></tr><tr><td>Priority</td><td>High</td></tr><tr><td>Status</td><td>Open</td></tr><tr><td>Source</td><td>Manual usability test</td></tr><tr><td>Area</td><td>Frontend client dashboard / product discovery</td></tr></tbody></table></div>
+<p>The client dashboard and product discovery workflow do not provide search or category filtering. As inventory grows, users may need to scan manually through product cards, increasing task time.</p>
+<p>Steps to reproduce:</p>
+<ol><li>Log in as a client user.</li><li>Navigate to the client dashboard and product browsing workflow.</li><li>Attempt to search for a specific product name or filter by category/supplier.</li></ol>
+<p>Expected result: a search bar and basic filtering controls are available.</p>
+<p>Actual result: no search or filtering functionality is available in the observed dashboard/product discovery flow.</p>
+<p>Suggested fix: add product search and filter controls to the client-facing product discovery workflow.</p>
+<h3>Evidence</h3>
+<figure><img src="../evidence/friend-doc/def-012-dashboard-no-search.png" alt="DEF-012 missing search/filter evidence"><figcaption>DEF-012 missing search/filter evidence</figcaption></figure>
   </main>
 </body>
 </html>

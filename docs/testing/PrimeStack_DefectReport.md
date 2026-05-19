@@ -4,11 +4,11 @@ Course: Software Validation, Verification and Security Testing
 Application under test: Frost Inventory and Shopping System  
 Team: Prime Stack  
 Environment: Local backend `http://localhost:3000`, frontend `http://localhost:4200`  
-Report date: 18 May 2026
+Report date: 19 May 2026
 
 ## 1. Defect Origin Summary
 
-Not every defect came from the same test type. DEF-001 and DEF-002 were confirmed by backend functional tests. DEF-005, DEF-006, and DEF-007 come from security test design/scripted security checks. DEF-008 comes from the ZAP scan/header verification. DEF-003 and DEF-004 are source-code review/API robustness defects.
+Not every defect came from the same test type. DEF-001 and DEF-002 were confirmed by backend functional tests. DEF-005, DEF-006, and DEF-007 come from security test design/scripted security checks. DEF-008 comes from the ZAP scan/header verification. DEF-003 and DEF-004 are source-code review/API robustness defects. DEF-009 and DEF-010 were confirmed by expanded Playwright profile coverage. DEF-011 and DEF-012 come from teammate manual usability review.
 
 | ID | Title | Origin | Severity | Status |
 | --- | --- | --- | --- | --- |
@@ -20,6 +20,10 @@ Not every defect came from the same test type. DEF-001 and DEF-002 were confirme
 | DEF-006 | `/User/users` exposes all user data without authentication | Security test ST-007 and route review | High | Fixed |
 | DEF-007 | XSS payload stored in database without sanitization | Security test ST-003 | Medium | Fixed |
 | DEF-008 | Missing security headers | ZAP scan/header verification | Low | Fixed |
+| DEF-009 | Login stores value objects in session, causing `[object Object]` in UI | Playwright profile test UT-007 | Medium | Fixed |
+| DEF-010 | Profile refresh assigns wrapped API response as user state | Playwright profile edit test UT-009 | Medium | Fixed |
+| DEF-011 | Inconsistent background color on registration input fields | Manual usability test UT-MAN-001 | Low | Open |
+| DEF-012 | Missing search and filtering functionality for product discovery | Manual usability test UT-MAN-002 | Medium | Open |
 
 ## 2. Functional Test Evidence Summary
 
@@ -40,8 +44,8 @@ Tests: 36 passed, 36 total
 After fixing the security defects, the k6 security result was:
 
 ```text
-checks_succeeded: 100.00% 7 out of 7
-checks_failed: 0.00% 0 out of 7
+checks_succeeded: 100.00% 8 out of 8
+checks_failed: 0.00% 0 out of 8
 ```
 
 ![Functional test result before fixes](evidence/defects/functional-before-summary-3-failed.png)
@@ -282,3 +286,131 @@ Content-Security-Policy: default-src 'self'; frame-ancestors 'none'; form-action
 ### Evidence
 
 ![DEF-008 security header middleware fix](evidence/defects/def-008-security-headers-fix.png)
+
+## DEF-009: Login Stores Value Objects in Session, Causing `[object Object]` in UI
+
+### Origin
+
+Frontend Playwright profile testing. Confirmed by:
+
+- `UT-007: Client can view profile and open edit profile form`
+
+### Details
+
+| Field | Value |
+| --- | --- |
+| Severity | Medium |
+| Status | Fixed |
+| Test file | `frontend/tests/example.spec.ts` |
+| Source file | `backend/api/UserRoute.js` |
+
+The login route stored `user.username` and `user.email` directly in the session. In some cases those fields are value objects, so `/User/status` returned an object instead of a string. The Angular profile screen then rendered `Welcome, [object Object]!`.
+
+Fix applied: the login route now stores primitive string values using `.value` or `._value` before falling back to the raw field.
+
+Verification:
+
+```text
+PASS [chromium] UT-007: Client can view profile and open edit profile form
+PASS [firefox] UT-007: Client can view profile and open edit profile form
+```
+
+## DEF-010: Profile Refresh Assigns Wrapped API Response as User State
+
+### Origin
+
+Frontend Playwright profile edit testing. Confirmed by:
+
+- `UT-009: Client can edit profile username and email`
+
+### Details
+
+| Field | Value |
+| --- | --- |
+| Severity | Medium |
+| Status | Fixed |
+| Test file | `frontend/tests/example.spec.ts` |
+| Source file | `frontend/src/app/components/clientPanels/client-profile/client-profile.ts` |
+
+After a profile update, the profile component refreshed the user profile but assigned the full API response wrapper to `currentUser`. Because `/User/profile` returns `{ message, user }`, the page could render blank profile fields after saving.
+
+Fix applied: `fetchFreshProfile()` now assigns `response.user || response`, so both wrapped and direct user responses are handled.
+
+Verification:
+
+```text
+PASS [chromium] UT-009: Client can edit profile username and email
+PASS [firefox] UT-009: Client can edit profile username and email
+```
+
+## DEF-011: Inconsistent Background Color on Registration Input Fields
+
+### Origin
+
+Manual usability testing from teammate review. Related observation:
+
+- `UT-MAN-001: Registration visual consistency`
+
+### Details
+
+| Field | Value |
+| --- | --- |
+| Severity | Low |
+| Priority | Medium |
+| Status | Open |
+| Source | Manual usability test |
+| Area | Frontend `/login` registration form |
+
+On the registration form, the username and password inputs appear with a gray background while the email input appears white. Test users may interpret the gray fields as disabled or less editable, which slows down the registration flow.
+
+Steps to reproduce:
+
+1. Navigate to `http://localhost:4200/login`.
+2. Click the `Register` tab.
+3. Compare the username, email, and password input field backgrounds.
+
+Expected result: all active registration inputs use consistent visual styling.
+
+Actual result: input field background colors are inconsistent.
+
+Suggested fix: unify CSS styling for all input fields in the login/register component.
+
+### Evidence
+
+![DEF-011 registration input color evidence](evidence/friend-doc/def-011-registration-input-colors.png)
+
+## DEF-012: Missing Search and Filtering Functionality for Product Discovery
+
+### Origin
+
+Manual usability testing from teammate review. Related observation:
+
+- `UT-MAN-002: Product discovery/search`
+
+### Details
+
+| Field | Value |
+| --- | --- |
+| Severity | Medium |
+| Priority | High |
+| Status | Open |
+| Source | Manual usability test |
+| Area | Frontend client dashboard / product discovery |
+
+The client dashboard and product discovery workflow do not provide search or category filtering. As inventory grows, users may need to scan manually through product cards, increasing task time.
+
+Steps to reproduce:
+
+1. Log in as a client user.
+2. Navigate to the client dashboard and product browsing workflow.
+3. Attempt to search for a specific product name or filter by category/supplier.
+
+Expected result: a search bar and basic filtering controls are available.
+
+Actual result: no search or filtering functionality is available in the observed dashboard/product discovery flow.
+
+Suggested fix: add product search and filter controls to the client-facing product discovery workflow.
+
+### Evidence
+
+![DEF-012 missing search/filter evidence](evidence/friend-doc/def-012-dashboard-no-search.png)

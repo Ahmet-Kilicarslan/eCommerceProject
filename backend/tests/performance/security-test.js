@@ -150,6 +150,43 @@ export default function () {
     });
     logSecurityResult('ST-007', 'user list without login returned 401 as expected', allUsers, st007Passed);
 
+    sleep(0.5);
+
+    // ── ST-011: Authenticated Profile Access ────────────────────────────────
+    // Security/session check: login should create a usable session cookie
+    // Expected: authenticated client can access /User/profile
+    const profileUser = {
+        username: `profileuser${uniqueSuffix}`,
+        email: `profileuser-${uniqueSuffix}@test.com`,
+        password: 'Test1234!'
+    };
+
+    const profileRegister = http.post(
+        `${BASE_URL}/User/register`,
+        JSON.stringify(profileUser),
+        { headers: { 'Content-Type': 'application/json' } }
+    );
+
+    const profileLogin = http.post(
+        `${BASE_URL}/User/login`,
+        JSON.stringify({
+            username: profileUser.username,
+            password: profileUser.password
+        }),
+        { headers: { 'Content-Type': 'application/json' } }
+    );
+
+    const authenticatedProfile = http.get(`${BASE_URL}/User/profile`);
+    const st011Passed = profileRegister.status === 201 &&
+        profileLogin.status === 200 &&
+        authenticatedProfile.status === 200 &&
+        authenticatedProfile.body.includes(profileUser.username);
+
+    check(authenticatedProfile, {
+        'ST-011 authenticated user can access own profile': () => st011Passed,
+    });
+    logSecurityResult('ST-011', 'authenticated profile access returned the logged-in user as expected', authenticatedProfile, st011Passed);
+
 }
 
 function collectChecks(group, checks = []) {

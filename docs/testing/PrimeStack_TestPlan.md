@@ -2,7 +2,7 @@
 
 Team: Prime Stack  
 Application under test: Frost Inventory and Shopping System  
-Report date: 14 May 2026
+Report date: 19 May 2026
 
 ## 1. Introduction
 
@@ -16,7 +16,7 @@ In scope:
 - Product creation, listing, detailed listing, lookup, stock update, and deletion.
 - Supplier creation, listing, lookup, update, and deletion.
 - Purchase creation, purchase history retrieval, sorting, and purchased-product retrieval.
-- Frontend layout, login/register validation, cart behavior, and product form behavior.
+- Frontend layout, login/register validation, protected navigation, product catalog, cart behavior, purchase completion, profile viewing, and profile editing.
 - API performance under normal, load, stress, and recovery conditions.
 - Security testing using scripted k6 attacks and OWASP ZAP automated scanning.
 
@@ -24,7 +24,7 @@ Out of scope:
 
 - Payment gateway integration, because no external payment service exists in the application.
 - Production HTTPS, deployment infrastructure, and third-party identity provider testing.
-- Browser compatibility beyond the development browser unless requested by the instructor.
+- Browser compatibility beyond Chromium and Firefox unless requested by the instructor.
 
 ## 3. Test Objectives
 
@@ -32,7 +32,7 @@ Out of scope:
 - Confirm that input validation handles normal, boundary, duplicate, missing, and invalid data cases.
 - Measure response time and error rate under increasing virtual-user load.
 - Identify common web security weaknesses, especially injection, authorization, security headers, and information disclosure issues.
-- Document the confirmed defects DEF-001 through DEF-008 in a reproducible format with severity, priority, evidence, and suggested fixes.
+- Document the confirmed defects DEF-001 through DEF-010 and open usability findings DEF-011 through DEF-012 in a reproducible format with severity, priority, evidence, and suggested fixes.
 
 ## 4. Test Items
 
@@ -42,18 +42,18 @@ Out of scope:
 | Product | `/Product/`, `/Product/getALL`, `/Product/getByProductId/:id`, `/Product/getBySupplierId/:supplier`, `/Product/decreaseAmount/:id`, `/Product/:id` |
 | Supplier | `/Supplier/`, `/Supplier/:id` |
 | Purchase | `/Purchase/create`, `/Purchase/getAll`, `/Purchase/byUserId/:userId`, `/Purchase/byUserInAsc/:userId`, `/Purchase/byUserInDesc/:userId`, `/Purchase/byPurchase/:purchaseId` |
-| Frontend | Application shell, login/register forms, cart, product form, admin/client navigation |
-| Security | Express response headers, protected routes, SQL injection payloads, XSS payloads, mass assignment, oversized payloads, unauthorized user-list access |
+| Frontend | Application shell, login/register forms, product catalog, cart, purchase flow, profile view/edit, admin/client navigation |
+| Security | Express response headers, protected routes, SQL injection payloads, XSS payloads, mass assignment, oversized payloads, unauthorized user-list access, authenticated session/profile access |
 
 ## 5. Test Approach
 
 Functional testing uses automated Jest and Supertest tests against the Express API. Test cases cover normal paths, boundary values, missing data, duplicate data, invalid identifiers, and invalid query parameters.
 
-Frontend/usability testing uses Playwright. These tests open the running Angular application in a browser, execute user-oriented scenarios, and save screenshots as evidence.
+Frontend/usability testing uses Playwright. These tests open the running Angular application in Chromium and Firefox, execute user-oriented scenarios, and save screenshots as evidence.
 
 Performance testing uses k6. The load test ramps from 5 virtual users to 20 virtual users, then stress tests at 50 virtual users before ramping down to zero. The target thresholds are `p(95)<500ms` and error rate below 10%.
 
-Security testing uses two approaches. First, a scripted k6 security test sends SQL injection, XSS, mass assignment, unauthenticated access, and oversized payload requests. Second, OWASP ZAP 2.17.0 scans `http://localhost:3000` and records passive/active findings.
+Security testing uses two approaches. First, a scripted k6 security test sends SQL injection, XSS, mass assignment, unauthenticated access, authenticated session/profile access, and oversized payload requests. Second, OWASP ZAP 2.17.0 scans `http://localhost:3000` and records passive/active findings.
 
 Usability testing is based on representative user tasks for an admin and a client. The evaluation focuses on task completion, clarity of validation messages, navigation consistency, and whether users can complete product browsing and cart actions without confusion.
 
@@ -99,6 +99,8 @@ Usability testing is based on representative user tasks for an admin and a clien
 | Missing authentication on admin endpoints | Unauthorized data exposure | Log as a security defect and add middleware to sensitive routes |
 | Mass assignment in registration | Any public user may become admin | Use field allow-listing and server-side role assignment |
 | Stored XSS in user-controlled fields | Malicious script may execute when rendered | Validate input and escape output |
+| Session user values are stored as objects instead of strings | Frontend may render `[object Object]` for profile data | Store primitive session fields and verify profile UI with Playwright |
+| API response wrapper differs from frontend expectation | Profile may render blank after edit/refresh | Normalize `response.user` before assigning component state |
 | Security headers are inconsistent | Browser-side protection is weaker | Add centralized security middleware such as Helmet |
 
 ## 10. Roles and Responsibilities

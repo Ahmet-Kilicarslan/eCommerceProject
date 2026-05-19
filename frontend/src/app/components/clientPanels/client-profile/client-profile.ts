@@ -164,7 +164,7 @@ currentUser: any = null;
       next: (response: User) => {
         console.log('🔄 Fresh profile data received:', response);
 
-        this.currentUser = response;
+        this.currentUser = (response as any).user || response;
         if (this.currentUser) {
           this.loadPurchaseLogInAscendingOrder();
         }
@@ -275,5 +275,4 @@ currentUser: any = null;
 
 
 }
-
 

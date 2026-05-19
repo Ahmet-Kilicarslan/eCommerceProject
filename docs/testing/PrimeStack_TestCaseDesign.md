@@ -2,7 +2,7 @@
 
 Team: Prime Stack  
 Application under test: Frost Inventory and Shopping System  
-Report date: 14 May 2026
+Report date: 19 May 2026
 
 ## 1. Purpose
 
@@ -53,9 +53,22 @@ This document defines the planned test cases for the Frost Inventory and Shoppin
 
 | ID | Area | Steps | Expected result |
 | --- | --- | --- | --- |
-| UT-001 | Registration and login usability | Open Angular app, navigate to login/register, fill registration fields, capture screenshots | User can complete registration/login preparation flow and screenshots are saved |
-| UT-002 | Product browsing usability | Open Angular app and navigate to the client product/dashboard page | Product browsing page loads and screenshots are saved |
-| UT-003 | Existing user login usability | Open login page, fill existing credentials, submit login, capture final screen | Login flow reaches a valid post-login page and screenshots are saved |
+| UT-001 | Registration form usability | Open Angular app, navigate to login/register, fill registration fields, capture screenshots | Registration form fields are visible/fillable and screenshots are saved |
+| UT-002 | Protected client route | Open Angular app and navigate to client dashboard without login | Unauthenticated user is redirected to `/login` |
+| UT-003 | Existing user login usability | Open login page, fill existing credentials, submit login, capture final screen | Login form accepts credentials and request flow completes |
+| UT-004 | Product catalog | Login as a seeded client, create a seeded product/supplier, open Products page | Seeded product, price, stock, and supplier name are visible |
+| UT-005 | Cart workflow | Login as client, add seeded product to cart, increment/decrement quantity, remove product | Cart reflects item, quantity updates, and empty-cart state |
+| UT-006 | Purchase workflow | Login as client, add seeded product to cart, click Buy | Purchase API returns success and success toast appears |
+| UT-007 | Profile view | Login as client, open Profile, click Edit | Profile data, purchase log area, and edit modal fields are visible |
+| UT-008 | Supplier route protection | Navigate to `/Supplier` without login | User is redirected to `/login` |
+| UT-009 | Profile edit | Login as client, edit username/email in profile modal, save | Updated username/email are shown on the profile page |
+
+Manual usability observations from the teammate review:
+
+| ID | Area | Steps | Expected result |
+| --- | --- | --- | --- |
+| UT-MAN-001 | Registration visual consistency | Open `/login`, switch to Register, compare input field backgrounds | All active input fields use consistent styling; recorded as DEF-011 |
+| UT-MAN-002 | Product discovery/search | Log in as client and inspect dashboard/product discovery workflow | Search or filtering support should be available for larger inventories; recorded as DEF-012 |
 
 ## 4. Performance Test Cases
 
@@ -82,14 +95,15 @@ This document defines the planned test cases for the Frost Inventory and Shoppin
 | ST-008 | Security headers | ZAP scan of `http://localhost:3000/Product/` | `X-Content-Type-Options: nosniff` should be present; covered by DEF-008 |
 | ST-009 | Information disclosure | ZAP scan of missing route such as `/robots.txt` | `X-Powered-By` should be suppressed; covered by DEF-008 |
 | ST-010 | CSP configuration | ZAP scan of missing route such as `/robots.txt` | CSP should define `frame-ancestors` and `form-action`; covered by DEF-008 |
+| ST-011 | Authenticated session access | Register/login a client in k6, then GET `/User/profile` with session cookie | Status 200 and returned profile matches logged-in user |
 
 ## 6. Traceability Matrix
 
 | Requirement / objective | Test cases |
 | --- | --- |
-| User authentication works and validates input | TC-FUNC-001 to TC-FUNC-013, UT-001, UT-003, ST-001, ST-004 |
-| Product inventory can be managed | TC-FUNC-014 to TC-FUNC-021, UT-002 |
-| Suppliers can be managed | TC-FUNC-022 to TC-FUNC-028 |
-| Purchases and cart actions work | TC-FUNC-029 to TC-FUNC-036 |
+| User authentication works and validates input | TC-FUNC-001 to TC-FUNC-013, UT-001 to UT-003, UT-007, UT-009, ST-001, ST-004, ST-011 |
+| Product inventory can be managed | TC-FUNC-014 to TC-FUNC-021, UT-004 |
+| Suppliers can be managed | TC-FUNC-022 to TC-FUNC-028, UT-004, UT-008 |
+| Purchases and cart actions work | TC-FUNC-029 to TC-FUNC-036, UT-005, UT-006, UT-007 |
 | Application responds under load | PT-001 to PT-006 |
-| Security risks are identified | ST-001 to ST-010 |
+| Security risks are identified | ST-001 to ST-011 |
