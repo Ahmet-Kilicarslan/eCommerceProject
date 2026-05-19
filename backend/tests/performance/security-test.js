@@ -8,6 +8,12 @@ export const options = {
     iterations: 1,
 };
 
+function logSecurityResult(id, description, response, passed) {
+    const outcome = passed ? 'PASS' : 'FAIL';
+    const bodyPreview = response.body ? ` - ${response.body.slice(0, 180)}` : '';
+    console.log(`${outcome} ${id}: ${description}. Status ${response.status}${bodyPreview}`);
+}
+
 export default function () {
     const uniqueSuffix = `${Date.now()}-${__VU}-${__ITER}`;
 
@@ -22,11 +28,12 @@ export default function () {
         }),
         { headers: { 'Content-Type': 'application/json' } }
     );
+    const st001Passed = sqlInjectionLogin.status !== 200;
     check(sqlInjectionLogin, {
         'ST-001 SQL injection on login is rejected': (r) =>
             r.status !== 200,
     });
-    console.log(`ST-001 SQL Injection Login: ${sqlInjectionLogin.status} - ${sqlInjectionLogin.body}`);
+    logSecurityResult('ST-001', 'SQL injection login rejected as expected', sqlInjectionLogin, st001Passed);
 
     sleep(0.5);
 
@@ -36,11 +43,12 @@ export default function () {
     const sqlInjectionProduct = http.get(
         `${BASE_URL}/Product/getByProductId/1' OR '1'='1`
     );
+    const st002Passed = sqlInjectionProduct.status !== 200 || !sqlInjectionProduct.body.includes('OR');
     check(sqlInjectionProduct, {
         'ST-002 SQL injection on product ID is rejected': (r) =>
             r.status !== 200 || !r.body.includes('OR'),
     });
-    console.log(`ST-002 SQL Injection Product: ${sqlInjectionProduct.status}`);
+    logSecurityResult('ST-002', 'SQL injection product lookup rejected as expected', sqlInjectionProduct, st002Passed);
 
     sleep(0.5);
 
@@ -56,11 +64,13 @@ export default function () {
         }),
         { headers: { 'Content-Type': 'application/json' } }
     );
+    const st003Passed = xssRegistration.status >= 400 ||
+        (xssRegistration.status === 201 && !xssRegistration.body.includes('<script>'));
     check(xssRegistration, {
         'ST-003 XSS payload in username is handled': (r) =>
-            r.status !== 200,
+            r.status >= 400 || (r.status === 201 && !r.body.includes('<script>')),
     });
-    console.log(`ST-003 XSS Registration: ${xssRegistration.status} - ${xssRegistration.body}`);
+    logSecurityResult('ST-003', 'XSS registration payload rejected as expected', xssRegistration, st003Passed);
 
     sleep(0.5);
 
@@ -68,11 +78,12 @@ export default function () {
     // Attack vector: access /User/profile without session cookie
     // Expected: 401 Unauthorized
     const unauthProfile = http.get(`${BASE_URL}/User/profile`);
+    const st004Passed = unauthProfile.status === 401;
     check(unauthProfile, {
         'ST-004 protected route rejects unauthenticated request': (r) =>
             r.status === 401,
     });
-    console.log(`ST-004 Unauth Profile Access: ${unauthProfile.status} - ${unauthProfile.body}`);
+    logSecurityResult('ST-004', 'profile without login returned 401 as expected', unauthProfile, st004Passed);
 
     sleep(0.5);
 
@@ -89,6 +100,11 @@ export default function () {
         }),
         { headers: { 'Content-Type': 'application/json' } }
     );
+    let st005Passed = true;
+    if (massAssignment.status === 201) {
+        const body = JSON.parse(massAssignment.body);
+        st005Passed = body.user?.role !== 'admin';
+    }
     check(massAssignment, {
         'ST-005 mass assignment does not grant admin role': (r) => {
             if (r.status === 201) {
@@ -98,7 +114,7 @@ export default function () {
             return true;
         },
     });
-    console.log(`ST-005 Mass Assignment: ${massAssignment.status} - ${massAssignment.body}`);
+    logSecurityResult('ST-005', 'role admin was not granted during public registration', massAssignment, st005Passed);
 
     sleep(0.5);
 
@@ -114,11 +130,12 @@ export default function () {
         }),
         { headers: { 'Content-Type': 'application/json' } }
     );
+    const st006Passed = oversizedRequest.status !== 0;
     check(oversizedRequest, {
         'ST-006 oversized payload does not crash server': (r) =>
             r.status !== 0,
     });
-    console.log(`ST-006 Oversized Payload: ${oversizedRequest.status}`);
+    logSecurityResult('ST-006', 'oversized login payload did not crash the server', oversizedRequest, st006Passed);
 
     sleep(0.5);
 
@@ -126,10 +143,44 @@ export default function () {
     // Attack vector: fetch all users without being logged in
     // Expected: should require authentication
     const allUsers = http.get(`${BASE_URL}/User/users`);
+    const st007Passed = allUsers.status === 401;
     check(allUsers, {
         'ST-007 user list requires authentication': (r) =>
             r.status === 401,
     });
-    console.log(`ST-007 Unauth User List: ${allUsers.status} - ${allUsers.body}`);
+    logSecurityResult('ST-007', 'user list without login returned 401 as expected', allUsers, st007Passed);
 
+}
+
+function collectChecks(group, checks = []) {
+    for (const checkResult of group.checks || []) {
+        checks.push(checkResult);
+    }
+
+    for (const childGroup of group.groups || []) {
+        collectChecks(childGroup, checks);
+    }
+
+    return checks;
+}
+
+export function handleSummary(data) {
+    const checks = collectChecks(data.root_group);
+    const checkLines = checks.map((checkResult) => {
+        const passes = checkResult.passes || 0;
+        const fails = checkResult.fails || 0;
+        const total = passes + fails;
+        const outcome = fails === 0 ? 'PASS' : 'FAIL';
+        return `  ${outcome} ${checkResult.name}: ${passes}/${total} passed`;
+    });
+
+    return {
+        stdout: [
+            '',
+            'Readable k6 security-test summary',
+            '---------------------------------',
+            ...checkLines,
+            '',
+        ].join('\n'),
+    };
 }

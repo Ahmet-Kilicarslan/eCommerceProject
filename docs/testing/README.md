@@ -33,6 +33,13 @@ cd backend
 npm test
 ```
 
+Run all functional tests with detailed per-test output:
+
+```bash
+cd backend
+npx jest --config jest.config.json --runInBand --verbose
+```
+
 Functional test files are located in:
 
 ```text
@@ -125,20 +132,118 @@ npx playwright test --headed
 
 ### ZAP Security Scan
 
-Start the backend:
+Use ZAP only against the local application that you own/control. For this project, scan the backend API on port `3000`.
+
+#### 1. Start the backend
+
+Open a terminal and run:
 
 ```bash
 cd backend
 node server.js
 ```
 
-Open ZAP and run an automated scan against:
+Confirm the backend is reachable:
+
+```bash
+curl -i http://localhost:3000/Product/
+```
+
+If the response is not returned, fix the backend/database first. ZAP will produce misleading results if the server is not reachable.
+
+#### 2. Open ZAP
+
+Launch **OWASP ZAP / ZAP by Checkmarx** from the application menu or terminal.
+
+Use **Standard Mode** when ZAP asks for a mode. A saved session is optional; for this assignment it is fine to use an untitled session.
+
+#### 3. Run Automated Scan
+
+Open the **Quick Start** tab and choose **Automated Scan**.
+
+Use this target URL:
 
 ```text
 http://localhost:3000/Product/
 ```
 
-Export the ZAP report after the scan and store it in the evidence folder.
+Recommended options:
+
+- Keep **Use traditional spider** enabled.
+- Keep **Use ajax spider** set to `Never`.
+- Browser selection can stay as Firefox.
+- Click **Attack**.
+
+Wait until ZAP shows that the attack/scan is complete. Then open the **Alerts** tab at the bottom.
+
+#### 4. Evidence to Capture
+
+Take screenshots of the main ZAP window and each important alert. For our report, the important alert types were:
+
+- `CSP: Failure to Define Directive with No Fallback`
+- `Server Leaks Information via "X-Powered-By" HTTP Response Header Field(s)`
+- `X-Content-Type-Options Header Missing`
+- `User Agent Fuzzer`
+
+For each screenshot, make sure the right-side alert detail panel shows:
+
+- URL
+- Risk
+- Confidence
+- Parameter
+- Evidence
+- CWE ID
+- Description
+
+Store screenshots in:
+
+```text
+docs/testing/evidence/
+```
+
+#### 5. Export HTML Report
+
+In ZAP, use:
+
+```text
+Report -> Generate Report
+```
+
+Recommended report settings:
+
+- Format: `HTML`
+- Scope: current sites/session
+- Include alerts and evidence
+- Save location: `docs/testing/evidence/`
+
+Use a clear filename, for example:
+
+```text
+docs/testing/evidence/2026-05-14-ZAP-Security-Report.html
+```
+
+The existing evidence file in this project is:
+
+```text
+docs/testing/evidence/2026-05-14-ZAP-Secuirty-Report-.html
+```
+
+Note: that filename contains a typo, but it is already referenced by the reports, so do not rename it unless the report links are updated too.
+
+#### 6. Re-test After Fixes
+
+After security fixes, restart the backend and run the same ZAP scan again. Confirm:
+
+- `X-Powered-By` is no longer present.
+- `X-Content-Type-Options: nosniff` is present.
+- CSP includes explicit no-fallback directives such as `frame-ancestors` and `form-action`.
+
+Quick header check without ZAP:
+
+```bash
+curl -i http://localhost:3000/robots.txt
+curl -i http://localhost:3000/Product/
+```
 
 ### Other Available Tests
 
